@@ -1,5 +1,6 @@
 import express from 'express';
 import {Client} from "@notionhq/client"
+import buscandoDadosMoodle from './buscandoDadosMoodle';
 const app = express();
 
 const notion = new Client({
@@ -7,7 +8,7 @@ const notion = new Client({
 });
 
 
-
+//TESTE DE ADIÇÃO DE DADOS EM UMA TABELA DO NOTION
 async function addItem(texto:string) {
   try {
     const testandu = await notion.databases.retrieve({ database_id: "29a82dfdd15147309bacc945d1da3722" });
@@ -36,10 +37,9 @@ async function addItem(texto:string) {
 }
 
 app.get('/', async (request, response) => {
-  const listUsersResponse = await notion.users.list({});
-  console.log(listUsersResponse);
-  addItem("testando testado testador apiwededed");
-  return response.status(200).send();
+  const busca = new buscandoDadosMoodle();
+  const listUsersResponse = await busca.getCourse();
+  return response.status(200).json(listUsersResponse);
 });
 
 app.listen(8400, "localhost");
