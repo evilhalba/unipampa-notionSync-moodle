@@ -1,5 +1,5 @@
 import axios from "axios";
-import ICourseQueryDTO from "./dtos/ICourseQueryDTO";
+import ICourseQueryDTO from "../../dtos/ICourseQueryDTO";
 import IBuscandoDadosMoodle from "./interfaces/IBuscandoDadosMoodle";
 
 class buscandoDadosMoodle implements IBuscandoDadosMoodle{

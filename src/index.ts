@@ -1,45 +1,19 @@
 import express from 'express';
-import {Client} from "@notionhq/client"
-import buscandoDadosMoodle from './buscandoDadosMoodle';
+import * as dotenv from 'dotenv';
+import buscandoDadosMoodle from './providers/moodle/buscandoDadosMoodle';
+import AddTaskIntoNotion from './providers/notion/AddTaskIntoNotion';
 const app = express();
-
-const notion = new Client({
-  auth: "auth_token"
-});
+dotenv.config();
 
 
 //TESTE DE ADIÇÃO DE DADOS EM UMA TABELA DO NOTION
-async function addItem(texto:string) {
-  try {
-    const testandu = await notion.databases.retrieve({ database_id: "29a82dfdd15147309bacc945d1da3722" });
-    const retorno = await notion.pages.create({
-      parent: {
-        database_id: "database_id",
-      },
-      properties:{
-        Teste: {
-          rich_text:[
-            {
-              text: {
-                content: texto
-              },
-              
-            },
-          ],
-        }
-      
-      },
-    });
-    console.log(testandu)
-  }catch (e) {
-    console.log(e);
-  }
-}
 
 app.get('/', async (request, response) => {
   const busca = new buscandoDadosMoodle();
+  const addNt = new AddTaskIntoNotion();
   const listUsersResponse = await busca.getCourse();
-  return response.status(200).json(listUsersResponse);
+  const testeNotion = await addNt.add();
+  return response.status(200).json(testeNotion);
 });
 
 app.listen(8400, "localhost");
