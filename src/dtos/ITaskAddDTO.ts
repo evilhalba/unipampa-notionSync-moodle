@@ -1,3 +1,7 @@
 export default interface IAddTaskDTO{
-  id: string;
+  taskTitle: string;
+  dueDate: string;
+  status:string;
+  course: string;
+  link:string;
 }
