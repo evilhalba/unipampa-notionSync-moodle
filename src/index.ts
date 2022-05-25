@@ -9,11 +9,9 @@ dotenv.config();
 //TESTE DE ADIÇÃO DE DADOS EM UMA TABELA DO NOTION
 
 app.get('/', async (request, response) => {
-  const busca = new buscandoDadosMoodle();
-  const addNt = new AddTaskIntoNotion();
-  const listUsersResponse = await busca.getCourse();
-  const testeNotion = await addNt.add();
-  return response.status(200).json(testeNotion);
+  const moodle = new buscandoDadosMoodle();
+  const busca = await moodle.getCourse('16724');
+  return response.status(200).json(busca);
 });
 
 app.listen(8400, "localhost");

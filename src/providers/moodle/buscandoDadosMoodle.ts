@@ -1,13 +1,21 @@
 import axios from "axios";
-import ICourseQueryDTO from "../../dtos/ICourseQueryDTO";
 import IBuscandoDadosMoodle from "./interfaces/IBuscandoDadosMoodle";
 import ITokenMoodle from "./interfaces/ITokenMoodle";
 
+interface moodleStructure {
+  data:[
+    {
+      id:string,
+    }
+  ]
+}
+
 class buscandoDadosMoodle implements IBuscandoDadosMoodle{
   public async genToken(): Promise<ITokenMoodle> {
-    const responseData = await  axios.get("", {params:{
+    const responseData = await  axios.get("https://moodle.unipampa.edu.br/moodle/login/token.php", {params:{
       username: process.env.MOODLE_USER,
-      password: process.env.MOODLE_PASS
+      password: process.env.MOODLE_PASSWORD,
+      service: 'moodle_mobile_app'
     }});
 
     if(responseData.status !== 200){
@@ -16,21 +24,27 @@ class buscandoDadosMoodle implements IBuscandoDadosMoodle{
 
     const responseFinal = {
       token: responseData.data.token,
-      privateToken: responseData.data.privateToken
+      privateToken: responseData.data.privatetoken
     }
-
     return responseFinal;
   };
 
-  public async getCourse(data?: ICourseQueryDTO): Promise<any> {
+  public async getCourse(courseId: string): Promise<any> {
     const tokenMoodle = await this.genToken();
     const response = await axios.get("https://moodle.unipampa.edu.br/moodle/webservice/rest/server.php", {params: {
       moodlewsrestformat: 'json',
       wsfunction: 'core_course_get_contents',
       wstoken: tokenMoodle.token,
-      courseid: '17264',// analise e projeto de software
+      courseid: courseId
     }});
-    return response.data;
+
+    //tratar response e passar tudo para um array de 
+    //courseLessons e disponibilizar no retorno da função
+    
+    const moodleStru: moodleStructure = response.data;
+    const {data} = response;
+    console.log(data[3].modules[2].dates);
+    return moodleStru;
   }
 
 }

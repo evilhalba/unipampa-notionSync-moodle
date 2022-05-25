@@ -1,7 +1,6 @@
-import ICourseQueryDTO from "../../../dtos/ICourseQueryDTO";
 import ITokenMoodle from "./ITokenMoodle";
 
 export default interface IBuscandoDadosMoodle{
-  getCourse(data?:ICourseQueryDTO): Promise<any>;
+  getCourse(courseId:string): Promise<any>;
   genToken():Promise<ITokenMoodle>;
 }
